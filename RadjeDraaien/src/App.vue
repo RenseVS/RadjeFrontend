@@ -20,6 +20,8 @@
       :prizes="prizes"
       :duration="duration"
       :verify="isVerifiedCanvas"
+      btnText="🍻"
+      :fontSize="60"
       @rotateStart="onCanvasRotateStart"
       @rotateEnd="onRotateEnd"
     />
@@ -28,10 +30,10 @@
 
 <script>
 import audioFile from "@/assets/Victory.mp3";
+import tick from "@/assets/Tick.mp3";
 import axios from "axios";
 import FortuneWheel from "vue-fortune-wheel";
 import "vue-fortune-wheel/lib/vue-fortune-wheel.css";
-
 export default {
   components: {
     FortuneWheel,
@@ -46,14 +48,43 @@ export default {
       this.$refs.foo.onClickBtn();
     },
   },
+  mounted() {
+    const fooComponent = this.$refs.foo;
+    const fortuneWheelBoxElement = fooComponent.$refs.fortuneWheelBox;
+
+    const checkRotation = () => {
+      // Get the current rotation in degrees
+      const currentRotation = this.getRotationDegrees(fortuneWheelBoxElement);
+
+      // Calculate the difference in rotation from the last trigger
+      const rotationDifference = Math.abs(currentRotation - this.lastRotation);
+      // Check if the rotation has changed by 35 degrees or more
+      if (rotationDifference >= 360 / this.prizes.length) {
+        const audio = new Audio(tick);
+        audio.play();
+        // Trigger your method in the main view
+        this.$emit("rotationTriggered");
+
+        // Update the lastRotation variable
+        this.lastRotation = currentRotation;
+      }
+
+      // Continue checking the rotation on the next frame
+      requestAnimationFrame(checkRotation);
+    };
+
+    // Start checking the rotation
+    checkRotation();
+  },
   data() {
     return {
+      lastRotation: 0,
       canvasVerify: true, // Whether the turntable in canvas mode is enabled for verification
       duration: 10000,
       prizes: [
         {
           id: 1, //* The unique id of each prize, an integer greater than 0
-          name: "Blue", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
+          name: "🍺", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
           value: "blue", //* Prize value, return value after spinning
           bgColor: "#45ace9", // Background color (no need for this parameter when type is image)
           color: "#ffffff", // Font color (this parameter is not required when type is image)
@@ -61,7 +92,7 @@ export default {
         },
         {
           id: 2,
-          name: "Red",
+          name: "🍺",
           value: "red",
           bgColor: "#dd3832",
           color: "#ffffff",
@@ -69,13 +100,14 @@ export default {
         },
         {
           id: 3,
-          name: "Yellow",
+          name: "🍺",
           value: "yellow",
           bgColor: "#fef151",
           color: "#ffffff",
           probability: 30,
         },
       ],
+      prizeId: {},
     };
   },
   computed: {
@@ -84,6 +116,14 @@ export default {
     },
   },
   methods: {
+    getRotationDegrees(element) {
+      const matrix = getComputedStyle(element).getPropertyValue("transform");
+      const matrixValues = matrix.split("(")[1].split(")")[0].split(",");
+      const a = matrixValues[0];
+      const b = matrixValues[1];
+      const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+      return angle < 0 ? angle + 360 : angle;
+    },
     onImageRotateStart() {
       console.log("onRotateStart");
     },
