@@ -20,7 +20,7 @@
       :prizes="prizes"
       :duration="duration"
       :verify="isVerifiedCanvas"
-      btnText="🍻"
+      btnText="Stips Cafe"
       :fontSize="60"
       @rotateStart="onCanvasRotateStart"
       @rotateEnd="onRotateEnd"
@@ -84,27 +84,51 @@ export default {
       prizes: [
         {
           id: 1, //* The unique id of each prize, an integer greater than 0
-          name: "🍺", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
+          name: "🍹🍹", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
           value: "blue", //* Prize value, return value after spinning
           bgColor: "#45ace9", // Background color (no need for this parameter when type is image)
           color: "#ffffff", // Font color (this parameter is not required when type is image)
-          probability: 30, //* Probability, up to 4 decimal places (the sum of the probabilities of all prizes
+          probability: 15, //* Probability, up to 4 decimal places (the sum of the probabilities of all prizes
         },
         {
           id: 2,
-          name: "🍺",
+          name: "🍷",
           value: "red",
           bgColor: "#dd3832",
           color: "#ffffff",
-          probability: 40,
+          probability: 15,
         },
         {
           id: 3,
-          name: "🍺",
+          name: "🥃🥃",
           value: "yellow",
           bgColor: "#fef151",
           color: "#ffffff",
-          probability: 30,
+          probability: 15,
+        },
+        {
+          id: 4, //* The unique id of each prize, an integer greater than 0
+          name: "🍺🍺", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
+          value: "blue", //* Prize value, return value after spinning
+          bgColor: "#45ace9", // Background color (no need for this parameter when type is image)
+          color: "#ffffff", // Font color (this parameter is not required when type is image)
+          probability: 25, //* Probability, up to 4 decimal places (the sum of the probabilities of all prizes
+        },
+        {
+          id: 5,
+          name: "🍸",
+          value: "red",
+          bgColor: "#dd3832",
+          color: "#ffffff",
+          probability: 15,
+        },
+        {
+          id: 6,
+          name: "🍾",
+          value: "yellow",
+          bgColor: "#fef151",
+          color: "#ffffff",
+          probability: 15,
         },
       ],
       prizeId: {},
@@ -157,6 +181,7 @@ export default {
           "https://localhost:7021/WeatherForecast/PostResult",
           {
             color: prize.value,
+            prize: prize.name,
           },
           config
         )
