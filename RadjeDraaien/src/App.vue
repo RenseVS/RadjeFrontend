@@ -12,6 +12,7 @@
       background-size: cover;
     "
   >
+    <div class="container">{{ this.userText }} {{ this.user }}</div>
     <FortuneWheel
       ref="foo"
       style="width: 500px"
@@ -30,6 +31,7 @@
 
 <script>
 import audioFile from "@/assets/Victory.mp3";
+import Challenger from "@/assets/Challenger.mp3";
 import tick from "@/assets/Tick.mp3";
 import axios from "axios";
 import FortuneWheel from "vue-fortune-wheel";
@@ -44,8 +46,15 @@ export default {
     },
     receive(data) {
       console.log("Data received from .Net Core: ", data);
+      this.userText = "Spinning User:";
       this.duration = data * 1000;
       this.$refs.foo.onClickBtn();
+    },
+    receiveuser(data) {
+      this.userText = "Next User:";
+      this.user = data;
+      const audio = new Audio(Challenger);
+      audio.play();
     },
   },
   mounted() {
@@ -78,55 +87,57 @@ export default {
   },
   data() {
     return {
+      userText: "",
+      user: "",
       lastRotation: 0,
       canvasVerify: true, // Whether the turntable in canvas mode is enabled for verification
       duration: 10000,
       prizes: [
         {
           id: 1, //* The unique id of each prize, an integer greater than 0
-          name: "🍹🍹", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
+          name: "💧", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
           value: "blue", //* Prize value, return value after spinning
-          bgColor: "#45ace9", // Background color (no need for this parameter when type is image)
+          bgColor: "#1e2f97", // Background color (no need for this parameter when type is image)
           color: "#ffffff", // Font color (this parameter is not required when type is image)
           probability: 15, //* Probability, up to 4 decimal places (the sum of the probabilities of all prizes
         },
         {
           id: 2,
-          name: "🍷",
-          value: "red",
-          bgColor: "#dd3832",
+          name: "🍺",
+          value: "yellow",
+          bgColor: "#fbe106",
           color: "#ffffff",
           probability: 15,
         },
         {
           id: 3,
-          name: "🥃🥃",
-          value: "yellow",
-          bgColor: "#fef151",
+          name: "💧",
+          value: "blue",
+          bgColor: "#1e2f97",
           color: "#ffffff",
           probability: 15,
         },
         {
           id: 4, //* The unique id of each prize, an integer greater than 0
-          name: "🍺🍺", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
-          value: "blue", //* Prize value, return value after spinning
-          bgColor: "#45ace9", // Background color (no need for this parameter when type is image)
+          name: "🍺", // Prize name, display value when type is canvas (this parameter is not needed when type is image)
+          value: "yellow", //* Prize value, return value after spinning
+          bgColor: "#fbe106", // Background color (no need for this parameter when type is image)
           color: "#ffffff", // Font color (this parameter is not required when type is image)
           probability: 25, //* Probability, up to 4 decimal places (the sum of the probabilities of all prizes
         },
         {
           id: 5,
-          name: "🍸",
-          value: "red",
-          bgColor: "#dd3832",
+          name: "💧",
+          value: "blue",
+          bgColor: "#1e2f97",
           color: "#ffffff",
           probability: 15,
         },
         {
           id: 6,
-          name: "🍾",
+          name: "🍺",
           value: "yellow",
-          bgColor: "#fef151",
+          bgColor: "#fbe106",
           color: "#ffffff",
           probability: 15,
         },
@@ -212,5 +223,17 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+</style>
+
+<style>
+.container {
+  display: inline-block;
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 100vh;
+  color: white;
+  font-size: x-large;
 }
 </style>
